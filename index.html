@@ -24,4 +24,60 @@
             <h1 class="text-2xl font-bold text-gray-800 flex items-center">
                 <button class="toggle-btn text-gray-600 mr-2" data-target="billInputs">▼</button> Bill Splitter
             </h1>
-            <div id="bill​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+            <div id="billInputs" class="section-content mt-4">
+                <form id="billForm" class="space-y-4">
+                    <div class="flex items-center">
+                        <label for="subtotal" class="w-32 text-gray-700">Subtotal ($):</label>
+                        <input type="number" id="subtotal" step="0.01" min="0" required class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center">
+                        <label for="taxAmount" class="w-32 text-gray-700">Tax Amount ($):</label>
+                        <input type="number" id="taxAmount" step="0.01" min="0" required class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center">
+                        <label for="tipPercent" class="w-32 text-gray-700">Tip Percentage (%):</label>
+                        <input type="number" id="tipPercent" step="0.1" min="0" required class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Calculate</button>
+                        <button type="button" id="resetBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="section mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                <button class="toggle-btn text-gray-600 mr-2" data-target="peopleSection">▼</button> People
+            </h2>
+            <div id="peopleSection" class="section-content mt-4">
+                <div id="peopleInputs" class="space-y-4"></div>
+                <button type="button" id="addPerson" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Add Person</button>
+            </div>
+        </div>
+
+        <div class="section mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                <button class="toggle-btn text-gray-600 mr-2" data-target="results">▼</button> Results
+            </h2>
+            <div id="results" class="section-content mt-4 hidden">
+                <p id="summary" class="mb-4 text-gray-700"></p>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-2 text-left">Name</th>
+                            <th class="p-2">Meal Cost ($)</th>
+                            <th class="p-2">Tax Share ($)</th>
+                            <th class="p-2">Tip Share ($)</th>
+                            <th class="p-2">Total ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultBody"></tbody>
+                    <tfoot id="resultFooter"></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
