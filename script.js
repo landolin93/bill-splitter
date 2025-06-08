@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const peopleInputs = document.getElementById('peopleInputs');
     const resultsDiv = document.getElementById('results');
     const resultBody = document.getElementById('resultBody');
+    const resultFooter = document.getElementById('resultFooter');
+    const summary = document.getElementById('summary');
     const resetBtn = document.getElementById('resetBtn');
     let personCount = 0;
 
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Form submitted');
 
         // Get inputs
-        const totalBill = parseFloat(document.getElementById('totalBill').value);
+        const subtotal = parseFloat(document.getElementById('subtotal').value);
         const taxAmount = parseFloat(document.getElementById('taxAmount').value);
         const tipPercent = parseFloat(document.getElementById('tipPercent').value);
         const people = Array.from(peopleInputs.querySelectorAll('.person-input')).map(div => {
@@ -105,30 +107,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Validate inputs
-        if (isNaN(totalBill) || isNaN(taxAmount) || isNaN(tipPercent) || totalBill < 0 || taxAmount < 0 || tipPercent < 0 || people.some(p => !p.name || p.itemCosts.some(c => isNaN(c) || c < 0))) {
+        if (isNaN(subtotal) || isNaN(taxAmount) || isNaN(tipPercent) || subtotal < 0 || taxAmount < 0 || tipPercent < 0 || people.some(p => !p.name || p.itemCosts.some(c => isNaN(c) || c < 0))) {
             alert('Please fill all fields correctly with non-negative values.');
             return;
         }
 
-        // Calculate
-        const tipAmount = totalBill * (tipPercent / 100);
+        // Calculate total meal cost
         const totalMealCost = people.reduce((sum, p) => sum + p.itemCosts.reduce((s, c) => s + c, 0), 0);
-
         if (totalMealCost === 0) {
             alert('Total meal cost cannot be zero.');
             return;
         }
 
+        // Calculate tip to make total bill a whole dollar
+        const initialTipAmount = subtotal * (tipPercent / 100);
+        const totalBillBeforeRounding = subtotal + taxAmount + initialTipAmount;
+        const roundedTotalBill = Math.round(totalBillBeforeRounding);
+        const adjustedTipAmount = roundedTotalBill - subtotal - taxAmount;
+        const adjustedTipPercent = (adjustedTipAmount / subtotal) * 100;
+
+        // Calculate shares
+        let totalMealCostSum = 0;
+        let totalTaxShare = 0;
+        let totalTipShare = 0;
+        let totalPerPersonSum = 0;
+
         // Clear previous results
         resultBody.innerHTML = '';
-        console.log('Calculating results:', { totalBill, taxAmount, tipPercent, totalMealCost });
+        resultFooter.innerHTML = '';
 
         // Calculate and display results
         people.forEach(person => {
             const mealCost = person.itemCosts.reduce((sum, cost) => sum + cost, 0);
             const taxShare = (mealCost / totalMealCost) * taxAmount;
-            const tipShare = (mealCost / totalMealCost) * tipAmount;
+            const tipShare = (mealCost / totalMealCost) * adjustedTipAmount;
             const totalPerPerson = mealCost + taxShare + tipShare;
+
+            // Update totals
+            totalMealCostSum += mealCost;
+            totalTaxShare += taxShare;
+            totalTipShare += tipShare;
+            totalPerPersonSum += totalPerPerson;
 
             const row = document.createElement('tr');
             row.className = 'border-t';
@@ -142,6 +161,21 @@ document.addEventListener('DOMContentLoaded', () => {
             resultBody.appendChild(row);
         });
 
+        // Add totals row
+        const footerRow = document.createElement('tr');
+        footerRow.className = 'bg-gray-200 font-semibold';
+        footerRow.innerHTML = `
+            <td class="p-2 text-left">Total</td>
+            <td class="p-2">${totalMealCostSum.toFixed(2)}</td>
+            <td class="p-2">${totalTaxShare.toFixed(2)}</td>
+            <td class="p-2">${totalTipShare.toFixed(2)}</td>
+            <td class="p-2">${totalPerPersonSum.toFixed(2)}</td>
+        `;
+        resultFooter.appendChild(footerRow);
+
+        // Display summary
+        summary.textContent = `Total Bill: $${roundedTotalBill.toFixed(2)} (Subtotal: $${subtotal.toFixed(2)}, Tax: $${taxAmount.toFixed(2)}, Tip: $${adjustedTipAmount.toFixed(2)} at ${adjustedTipPercent.toFixed(1)}%)`;
+
         resultsDiv.classList.remove('hidden');
     });
 
@@ -154,6 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addPerson();
         resultsDiv.classList.add('hidden');
         resultBody.innerHTML = '';
+        resultFooter.innerHTML = '';
+        summary.textContent = '';
     });
 
     // Collapsible sections
