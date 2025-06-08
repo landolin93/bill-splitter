@@ -1,80 +1,168 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('billForm');
-    const addPersonBtn = document.getElementById('addPerson');
-    const peopleInputs = document.getElementById('peopleInputs');
-    const resultsDiv = document.getElementById('results');
-    const resultBody = document.getElementById('resultBody');
-    let personCount = 0;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
 
-    // Add initial person input
-    addPerson();
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
 
-    // Add person input fields
-    addPersonBtn.addEventListener('click', addPerson);
+.section {
+    margin-bottom: 20px;
+}
 
-    function addPerson() {
-        personCount++;
-        const div = document.createElement('div');
-        div.className = 'person-input';
-        div.innerHTML = `
-            <input type="text" class="person-name" placeholder="Name" required>
-            <input type="number" class="person-cost" step="0.01" min="0" placeholder="Meal Cost ($)" required>
-            <button type="button" class="remove-btn">Remove</button>
-        `;
-        peopleInputs.appendChild(div);
+h1, h2 {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
 
-        // Add remove button functionality
-        div.querySelector('.remove-btn').addEventListener('click', () => {
-            if (personCount > 1) {
-                div.remove();
-                personCount--;
-            } else {
-                alert('At least one person is required.');
-            }
-        });
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.section-content {
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+    padding: 0;
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+label {
+    display: inline-block;
+    width: 150px;
+}
+
+input, button {
+    padding: 8px;
+    margin: 5px 0;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#resetBtn {
+    background-color: #f44336;
+    margin-left: 10px;
+}
+
+#resetBtn:hover {
+    background-color: #da190b;
+}
+
+#peopleInputs {
+    margin: 10px 0;
+}
+
+.person-input {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.person-input-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.person-items {
+    margin-left: 20px;
+}
+
+.item-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.item-input input {
+    flex: 1;
+}
+
+.remove-btn, .remove-item-btn {
+    background-color: #f44336;
+}
+
+.remove-btn:hover, .remove-item-btn:hover {
+    background-color: #da190b;
+}
+
+.add-item-btn {
+    background-color: #2196F3;
+    margin-left: 20px;
+}
+
+.add-item-btn:hover {
+    background-color: #1976D2;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td:first-child {
+    text-align: left;
+}
+
+.hidden {
+    display: none;
+}
+
+.button-group {
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    label {
+        width: 100%;
+        display: block;
     }
-
-    // Form submission
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Get inputs
-        const totalBill = parseFloat(document.getElementById('totalBill').value);
-        const taxAmount = parseFloat(document.getElementById('taxAmount').value);
-        const tipPercent = parseFloat(document.getElementById('tipPercent').value);
-        const people = Array.from(peopleInputs.querySelectorAll('.person-input')).map(div => ({
-            name: div.querySelector('.person-name').value,
-            mealCost: parseFloat(div.querySelector('.person-cost').value)
-        }));
-
-        // Validate inputs
-        if (isNaN(totalBill) || isNaN(taxAmount) || isNaN(tipPercent) || people.some(p => !p.name || isNaN(p.mealCost))) {
-            alert('Please fill all fields correctly.');
-            return;
-        }
-
-        // Calculate
-        const tipAmount = totalBill * (tipPercent / 100);
-        const taxPerPerson = taxAmount / people.length;
-        const tipPerPerson = tipAmount / people.length;
-
-        // Clear previous results
-        resultBody.innerHTML = '';
-
-        // Display results
-        people.forEach(person => {
-            const totalPerPerson = person.mealCost + taxPerPerson + tipPerPerson;
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${person.name}</td>
-                <td>${person.mealCost.toFixed(2)}</td>
-                <td>${taxPerPerson.toFixed(2)}</td>
-                <td>${tipPerPerson.toFixed(2)}</td>
-                <td>${totalPerPerson.toFixed(2)}</td>
-            `;
-            resultBody.appendChild(row);
-        });
-
-        resultsDiv.classList.remove('hidden');
-    });
-});
+    input, button {
+        width: 100%;
+    }
+    .person-input-header, .item-input {
+        flex-direction: column;
+    }
+}
