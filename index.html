@@ -22,7 +22,7 @@
     <div class="container mx-auto max-w-2xl p-6 bg-white rounded-xl shadow-lg mt-6">
         <div class="section">
             <h1 class="text-2xl font-bold text-gray-800 flex items-center">
-                <button class="toggle-btn text-gray-600 mr-2" data-target="billInputs">▼</button> Bill Splitter
+                <button class="toggle-btn text-gray-600 mr-2" data-target="billInputs" aria-expanded="true" aria-controls="billInputs">▼</button> Bill Splitter
             </h1>
             <div id="billInputs" class="section-content mt-4">
                 <form id="billForm" class="space-y-4">
@@ -48,7 +48,7 @@
 
         <div class="section mt-6">
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                <button class="toggle-btn text-gray-600 mr-2" data-target="peopleSection">▼</button> People
+                <button class="toggle-btn text-gray-600 mr-2" data-target="peopleSection" aria-expanded="true" aria-controls="peopleSection">▼</button> People
             </h2>
             <div id="peopleSection" class="section-content mt-4">
                 <div id="peopleInputs" class="space-y-4"></div>
@@ -56,9 +56,20 @@
             </div>
         </div>
 
+        <!-- New Shared Items Section -->
         <div class="section mt-6">
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                <button class="toggle-btn text-gray-600 mr-2" data-target="results">▼</button> Results
+                <button class="toggle-btn text-gray-600 mr-2" data-target="sharedItemsSection" aria-expanded="true" aria-controls="sharedItemsSection">▼</button> Shared Items
+            </h2>
+            <div id="sharedItemsSection" class="section-content mt-4">
+                <div id="sharedItemsInputs" class="space-y-4"></div>
+                <button type="button" id="addSharedItem" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Add Shared Item</button>
+            </div>
+        </div>
+
+        <div class="section mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                <button class="toggle-btn text-gray-600 mr-2" data-target="results" aria-expanded="true" aria-controls="results">▼</button> Results
             </h2>
             <div id="results" class="section-content mt-4 hidden">
                 <p id="summary" class="mb-4 text-gray-700"></p>
@@ -67,6 +78,7 @@
                         <tr class="bg-blue-600 text-white">
                             <th class="p-2 text-left">Name</th>
                             <th class="p-2">Meal Cost ($)</th>
+                            <th class="p-2">Shared Cost ($)</th>
                             <th class="p-2">Tax Share ($)</th>
                             <th class="p-2">Tip Share ($)</th>
                             <th class="p-2">Total ($)</th>
